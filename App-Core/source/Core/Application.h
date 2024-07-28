@@ -1,5 +1,6 @@
 #pragma once
 #include "Core/Base.h"
+#include "Graphics/Window.h"
 
 typedef struct
 {
@@ -12,6 +13,7 @@ typedef struct
 {
     b8 isRunning;
     AppInfo info;
+    Window window;
 } AppState;
 
 extern AppState App;

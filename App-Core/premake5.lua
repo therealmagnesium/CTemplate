@@ -8,24 +8,26 @@ targetdir("../bin/" .. outputdir .. "/%{prj.name}")
 objdir("../build/" .. outputdir .. "/%{prj.name}")
 
 files({
-	"source/**.h",
-	"source/**.c",
+    "source/**.h",
+    "source/**.c",
 })
 
 includedirs({
-	"source",
+    "source",
 })
 
 libdirs({})
 
-links({})
+links({
+    "SDL2",
+})
 
 filter("system:Unix")
 system("linux")
 cdialect("C17")
 systemversion("latest")
 defines({
-	"PLATFORM_LINUX",
+    "PLATFORM_LINUX",
 })
 
 filter({ "configurations:Debug" })

@@ -2,6 +2,8 @@
 #include "Core/Base.h"
 #include "Core/Log.h"
 
+#include "Graphics/Window.h"
+
 AppState App;
 static b8 initialized = false;
 
@@ -17,6 +19,7 @@ void CreateApplication(AppInfo* info)
 
     App.isRunning = true;
     App.info = *info;
+    App.window = CreateWindow();
 
     // TODO: Create window
 
@@ -29,10 +32,9 @@ void RunApplication()
 {
     while (App.isRunning)
     {
-        // TODO: Handle events
+        App.window.HandleEvents();
     }
 
-    // TODO: Free window memory
-    //
+    App.window.Close();
     INFO("Successfully ended the application!");
 }

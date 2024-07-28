@@ -17,6 +17,6 @@ int main(int argc, char* argv[])
     appInfo.screenWidth = 720;
 
     CreateApplication(&appInfo);
-    // RunApplication();
+    RunApplication();
     return 0;
 }

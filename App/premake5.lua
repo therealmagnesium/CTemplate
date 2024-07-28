@@ -20,6 +20,7 @@ libdirs({})
 
 links({
     "App-Core",
+    "SDL2",
 })
 
 postbuildcommands({
