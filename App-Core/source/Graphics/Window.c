@@ -1,6 +1,7 @@
 #include "Core/Application.h"
 #include "Graphics/Window.h"
 #include "Core/Base.h"
+#include "Core/Input.h"
 #include "Core/Log.h"
 
 #include <SDL2/SDL_video.h>
@@ -8,6 +9,9 @@
 
 static void HandleEvents()
 {
+    Input.mouse.clicked = false;
+    Input.key.pressed = false;
+
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
@@ -19,10 +23,57 @@ static void HandleEvents()
                 break;
             };
 
+            case SDL_MOUSEMOTION:
+            {
+                Input.mouse.position.x = event.motion.x;
+                Input.mouse.position.y = event.motion.y;
+
+                break;
+            }
+
+            case SDL_MOUSEBUTTONDOWN:
+            {
+                Input.mouse.clicked = !Input.mouse.held;
+                Input.mouse.held = true;
+                Input.mouse.button = event.button.button;
+
+                break;
+            }
+
+            case SDL_MOUSEBUTTONUP:
+            {
+                Input.mouse.clicked = false;
+                Input.mouse.held = false;
+                Input.mouse.button = 0;
+
+                break;
+            }
+
+            case SDL_KEYDOWN:
+            {
+                Input.key.pressed = !Input.key.held;
+                Input.key.held = true;
+                Input.key.scancode = event.key.keysym.scancode;
+
+                break;
+            }
+
+            case SDL_KEYUP:
+            {
+                Input.key.pressed = false;
+                Input.key.held = false;
+                Input.key.scancode = 0;
+
+                break;
+            }
+
             default:
                 break;
         }
     }
+
+    if (IsKeyPressed(KEY_ESCAPE))
+        App.isRunning = false;
 }
 
 static void Close()
