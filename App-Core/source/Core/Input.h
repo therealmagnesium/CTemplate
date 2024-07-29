@@ -2,7 +2,7 @@
 #include "Core/Base.h"
 #include "Core/KeyCodes.h"
 
-typedef struct
+typedef struct MouseInputState
 {
     Vector2 position;
     b8 held;
@@ -10,14 +10,14 @@ typedef struct
     u32 button;
 } MouseInputState;
 
-typedef struct
+typedef struct KeyboardInputState
 {
     b8 held;
     b8 pressed;
     u32 scancode;
 } KeyboardInputState;
 
-typedef struct
+typedef struct InputState
 {
     MouseInputState mouse;
     KeyboardInputState key;

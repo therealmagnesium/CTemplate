@@ -1,10 +1,11 @@
 #pragma once
-#include "Core/Application.h"
 #include "Core/Base.h"
 
 #include <SDL2/SDL.h>
 
-typedef struct
+struct AppInfo; // Forward declaration
+
+typedef struct Window
 {
     u16 width;
     u16 height;
@@ -18,4 +19,4 @@ typedef struct
 
 } Window;
 
-Window CreateWindow();
+Window CreateWindow(struct AppInfo* info);

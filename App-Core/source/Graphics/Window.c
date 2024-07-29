@@ -82,13 +82,13 @@ static void Close()
     SDL_Quit();
 }
 
-Window CreateWindow()
+Window CreateWindow(AppInfo* info)
 {
     // Setup window to be created
     Window window;
-    window.width = App.info.screenWidth;
-    window.height = App.info.screenHeight;
-    window.title = App.info.title;
+    window.width = info->screenWidth;
+    window.height = info->screenHeight;
+    window.title = info->title;
     window.vsync = true;
     window.fullscreen = false;
     window.handle = NULL;
@@ -109,7 +109,8 @@ Window CreateWindow()
 
     // Create the window handle
     s32 flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
-    window.handle = SDL_CreateWindow(window.title, 200, 200, window.width, window.height, flags);
+    window.handle = SDL_CreateWindow(window.title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window.width,
+                                     window.height, flags);
 
     // Check if creating the window handle failed
     if (!window.handle)

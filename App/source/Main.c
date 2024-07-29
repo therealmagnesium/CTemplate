@@ -1,19 +1,20 @@
-#include <Core/Application.h>
+#include "Game.h"
+
 #include <Core/Base.h>
-#include <Core/Log.h>
+#include <Core/EntryPoint.h>
 
-#include <Graphics/Renderer.h>
-
-int main(int argc, char* argv[])
+void CreateGameState(GameState* gameState)
 {
-    AppInfo appInfo;
-    appInfo.title = "C Template";
-    appInfo.screenWidth = 1280;
-    appInfo.screenHeight = 720;
+    Game game = SetupGame(); // Setup the game with correct function pointers
 
-    CreateApplication(&appInfo);
-    Renderer.clearColor = (Color){15, 15, 15, 255};
-    RunApplication();
+    // Set application info
+    gameState->info.screenWidth = 1280;
+    gameState->info.screenHeight = 720;
+    gameState->info.title = "C Template";
 
-    return 0;
+    // Set the game state's function pointers
+    gameState->OnCreate = game.OnCreate;
+    gameState->OnUpdate = game.OnUpdate;
+    gameState->OnRender = game.OnRender;
+    gameState->OnRenderUI = game.OnRenderUI;
 }

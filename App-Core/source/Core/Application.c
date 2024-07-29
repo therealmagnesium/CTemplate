@@ -9,7 +9,7 @@
 AppState App;
 static b8 initialized = false;
 
-void CreateApplication(AppInfo* info)
+void CreateApplication(GameState* game)
 {
     if (initialized)
     {
@@ -20,13 +20,13 @@ void CreateApplication(AppInfo* info)
     InitLogging();
 
     App.isRunning = true;
-    App.info = *info;
-    App.window = CreateWindow();
+    App.game = game;
+    App.window = CreateWindow(&game->info);
 
     InitRenderer();
+    App.game->OnCreate();
 
     initialized = true;
-
     INFO("Successfully created the application!");
 }
 
@@ -35,8 +35,13 @@ void RunApplication()
     while (App.isRunning)
     {
         App.window.HandleEvents();
+        App.game->OnUpdate();
 
         Renderer.BeginDrawing();
+        {
+            App.game->OnRender();
+            App.game->OnRenderUI();
+        }
         Renderer.EndDrawing();
     }
 
