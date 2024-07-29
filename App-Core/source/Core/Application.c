@@ -3,6 +3,7 @@
 #include "Core/Log.h"
 
 #include "Graphics/Window.h"
+#include "Graphics/Renderer.h"
 
 AppState App;
 static b8 initialized = false;
@@ -21,7 +22,7 @@ void CreateApplication(AppInfo* info)
     App.info = *info;
     App.window = CreateWindow();
 
-    // TODO: Create window
+    InitRenderer();
 
     initialized = true;
 
@@ -33,6 +34,9 @@ void RunApplication()
     while (App.isRunning)
     {
         App.window.HandleEvents();
+
+        Renderer.BeginDrawing();
+        Renderer.EndDrawing();
     }
 
     App.window.Close();

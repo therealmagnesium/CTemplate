@@ -14,12 +14,16 @@ files({
 
 includedirs({
     "source",
+    "../vendor/glad/include",
 })
 
-libdirs({})
+libdirs({
+    "../vendor/glad/lib",
+})
 
 links({
     "SDL2",
+    "glad",
 })
 
 filter("system:Unix")

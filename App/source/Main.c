@@ -2,21 +2,18 @@
 #include <Core/Base.h>
 #include <Core/Log.h>
 
+#include <Graphics/Renderer.h>
+
 int main(int argc, char* argv[])
 {
-    u32 funnyNumber = 420;
-    INFO("Funny number - %d", funnyNumber);
-    WARN("Funny number - %d", funnyNumber);
-    ERROR("Funny number - %d", funnyNumber);
-    FATAL("Funny number - %d", funnyNumber);
-    TRACE("Funny number - %d", funnyNumber);
-
     AppInfo appInfo;
     appInfo.title = "C Template";
     appInfo.screenWidth = 1280;
-    appInfo.screenWidth = 720;
+    appInfo.screenHeight = 720;
 
     CreateApplication(&appInfo);
+    Renderer.clearColor = (Color){15, 15, 15, 255};
     RunApplication();
+
     return 0;
 }

@@ -4,6 +4,7 @@
 #include "Core/Log.h"
 
 #include <SDL2/SDL_video.h>
+#include <glad/glad.h>
 
 static void HandleEvents()
 {
@@ -56,9 +57,8 @@ Window CreateWindow()
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     // Create the window handle
-    s32 flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL;
-    window.handle = SDL_CreateWindow(window.title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window.width,
-                                     window.height, flags);
+    s32 flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
+    window.handle = SDL_CreateWindow(window.title, 200, 200, window.width, window.height, flags);
 
     // Check if creating the window handle failed
     if (!window.handle)
@@ -68,6 +68,7 @@ Window CreateWindow()
     }
 
     void* glContext = SDL_GL_CreateContext(window.handle);
+    gladLoadGL();
 
     return window;
 }

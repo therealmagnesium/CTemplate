@@ -14,13 +14,17 @@ files({
 
 includedirs({
     "../App-Core/source",
+    "../vendor/glad/include",
 })
 
-libdirs({})
+libdirs({
+    "../vendor/glad/lib",
+})
 
 links({
     "App-Core",
     "SDL2",
+    "glad",
 })
 
 postbuildcommands({
