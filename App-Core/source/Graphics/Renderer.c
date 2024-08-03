@@ -1,5 +1,7 @@
 #include "Graphics/Renderer.h"
+#include "Graphics/RendererInternal.h"
 #include "Graphics/Color.h"
+
 #include "Core/Application.h"
 #include "Core/Base.h"
 #include "Core/Log.h"
@@ -8,6 +10,7 @@
 #include <glad/glad.h>
 
 RenderState Renderer;
+static InternalRenderState renderState;
 static bool initialized = false;
 
 static void BeginDrawing()
@@ -18,6 +21,13 @@ static void BeginDrawing()
 }
 
 static void EndDrawing() { SDL_GL_SwapWindow(App.window.handle); }
+
+static void DrawRectangle(vec2 position, vec2 size, Color color)
+{
+    renderState.vao.Bind(renderState.vao.id);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+    renderState.vao.Unbind();
+}
 
 void InitRenderer()
 {
@@ -30,6 +40,10 @@ void InitRenderer()
     Renderer.clearColor = (Color){0xFF, 0xFF, 0xFF, 0xFF};
     Renderer.BeginDrawing = BeginDrawing;
     Renderer.EndDrawing = EndDrawing;
+    Renderer.DrawRectangle = DrawRectangle;
+
+    renderState = CreateInternalRenderState();
+    RenderInitRect(&renderState.vbo, &renderState.ebo, &renderState.vao);
 
     initialized = true;
 }

@@ -21,7 +21,7 @@ void _LogOutput(LogLevel level, const char* message, ...)
 {
     b8 isError = level < 2;
     const char* levelStrings[5] = {
-        "Fatal: ", "Error: ", "Warn: ", "Info: ", "Trace: ",
+        "[Fatal] ", "[Error] ", "[Warn] ", "[Info] ", "[Trace] ",
     };
 
     char outMessage[32000];

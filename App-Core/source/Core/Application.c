@@ -6,6 +6,8 @@
 #include "Graphics/Window.h"
 #include "Graphics/Renderer.h"
 
+#include <glad/glad.h>
+
 AppState App;
 static b8 initialized = false;
 
@@ -27,7 +29,11 @@ void CreateApplication(GameState* game)
     App.game->OnCreate();
 
     initialized = true;
+
     INFO("Successfully created the application!");
+    INFO("GPU vendor - %s", glGetString(GL_VENDOR));
+    INFO("Renderer - %s", glGetString(GL_RENDERER));
+    INFO("OpenGL version - %s", glGetString(GL_VERSION));
 }
 
 void RunApplication()

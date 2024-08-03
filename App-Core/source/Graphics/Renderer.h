@@ -8,6 +8,7 @@ typedef struct RenderState
 
     void (*BeginDrawing)(void);
     void (*EndDrawing)(void);
+    void (*DrawRectangle)(vec2 position, vec2 size, Color color);
 } RenderState;
 
 extern RenderState Renderer;
