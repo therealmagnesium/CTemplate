@@ -15,6 +15,7 @@ files({
 includedirs({
     "source",
     "../vendor/glad/include",
+    "../vendor/cglm",
 })
 
 libdirs({
