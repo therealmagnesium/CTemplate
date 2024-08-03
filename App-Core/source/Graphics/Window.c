@@ -19,7 +19,6 @@ static void HandleEvents()
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
-
         switch (event.type)
         {
             case SDL_QUIT:
@@ -27,6 +26,25 @@ static void HandleEvents()
                 App.isRunning = false;
                 break;
             };
+
+            case SDL_WINDOWEVENT:
+            {
+                switch (event.window.event)
+                {
+                    case SDL_WINDOWEVENT_RESIZED:
+                    {
+                        App.window.width = event.window.data1;
+                        App.window.height = event.window.data2;
+                        glViewport(0, 0, App.window.width, App.window.height);
+
+                        INFO("Resized window to %dx%d", App.window.width, App.window.height);
+
+                        break;
+                    }
+                }
+
+                break;
+            }
 
             case SDL_MOUSEMOTION:
             {
