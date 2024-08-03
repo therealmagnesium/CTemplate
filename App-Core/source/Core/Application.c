@@ -2,6 +2,7 @@
 #include "Core/Base.h"
 #include "Core/Input.h"
 #include "Core/Log.h"
+#include "Core/Time.h"
 
 #include "Graphics/Window.h"
 #include "Graphics/Renderer.h"
@@ -20,6 +21,7 @@ void CreateApplication(GameState* game)
     }
 
     InitLogging();
+    InitTimeState(60);
 
     App.isRunning = true;
     App.game = game;
@@ -49,6 +51,8 @@ void RunApplication()
             App.game->OnRenderUI();
         }
         Renderer.EndDrawing();
+
+        UpdateTimeLate();
     }
 
     App.window.Close();

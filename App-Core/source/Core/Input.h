@@ -1,6 +1,13 @@
 #pragma once
 #include "Core/Base.h"
+#include "Core/Math.h"
 #include "Core/KeyCodes.h"
+
+typedef enum InputAxis
+{
+    INPUT_AXIS_HORIZONTAL = 0,
+    INPUT_AXIS_VERTICAL,
+} InputAxis;
 
 typedef struct MouseInputState
 {
@@ -28,3 +35,4 @@ bool IsMouseDown(MouseButton button);
 bool IsMouseClicked(MouseButton button);
 bool IsKeyDown(u32 scancode);
 bool IsKeyPressed(u32 scancode);
+float GetInputAxis(InputAxis axis);

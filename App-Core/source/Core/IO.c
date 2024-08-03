@@ -81,3 +81,22 @@ File ReadFile(const char* path)
     fclose(fileHandle);
     return file;
 }
+
+void WriteFile(void* buffer, u64 size, const char* path)
+{
+    FILE* fileHandle = fopen(path, "wb");
+    if (!fileHandle)
+    {
+        WARN("Failed to write file %s!", path);
+        return;
+    }
+
+    u64 chunksWritten = fwrite(buffer, size, 1, fileHandle);
+    fclose(fileHandle);
+
+    if (chunksWritten != 1)
+    {
+        WARN("Unexpected %ld chunks written!", chunksWritten);
+        return;
+    }
+}

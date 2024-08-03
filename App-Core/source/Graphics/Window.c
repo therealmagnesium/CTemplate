@@ -1,9 +1,10 @@
-#include "Core/Application.h"
 #include "Graphics/Window.h"
+#include "Core/Application.h"
 #include "Core/Base.h"
 #include "Core/Input.h"
 #include "Core/KeyCodes.h"
 #include "Core/Log.h"
+#include "Core/Time.h"
 
 #include <SDL2/SDL_keyboard.h>
 #include <SDL2/SDL_video.h>
@@ -11,6 +12,8 @@
 
 static void HandleEvents()
 {
+    UpdateTime();
+
     Input.mouse.clicked = false;
 
     for (u8 i = 0; i < KEY_COUNT; i++)
@@ -144,6 +147,11 @@ Window CreateWindow(AppInfo* info)
 
     void* glContext = SDL_GL_CreateContext(window.handle);
     gladLoadGL();
+
+    if (window.vsync)
+        SDL_GL_SetSwapInterval(1);
+    else
+        SDL_GL_SetSwapInterval(0);
 
     return window;
 }

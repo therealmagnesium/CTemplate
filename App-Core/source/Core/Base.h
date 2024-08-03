@@ -2,27 +2,6 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef struct
-{
-    float x;
-    float y;
-} Vector2;
-
-typedef struct
-{
-    float x;
-    float y;
-    float z;
-} Vector3;
-
-typedef struct
-{
-    float x;
-    float y;
-    float z;
-    float w;
-} Vector4;
-
 typedef int8_t s8;
 typedef int16_t s16;
 typedef int32_t s32;
@@ -34,10 +13,6 @@ typedef uint32_t u32;
 typedef uint64_t u64;
 
 typedef bool b8;
-
-typedef Vector2 v2;
-typedef Vector3 v3;
-typedef Vector4 v4;
 
 #define V2_FMT "<%.3f, %.3f>"
 #define V3_FMT "<%.3f, %.3f, %.3f>"

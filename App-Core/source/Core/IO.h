@@ -9,3 +9,4 @@ typedef struct File
 } File;
 
 File ReadFile(const char* path);
+void WriteFile(void* buffer, u64 size, const char* path);

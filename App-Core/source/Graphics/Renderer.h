@@ -1,5 +1,5 @@
 #pragma once
-#include "Core/Base.h"
+#include "Core/Math.h"
 #include "Graphics/Color.h"
 
 typedef struct RenderState
