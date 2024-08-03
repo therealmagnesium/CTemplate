@@ -89,4 +89,5 @@ typedef enum
     KEY_LEFT = 80,
     KEY_DOWN = 81,
     KEY_UP = 82,
+    KEY_COUNT,
 } KeyboardKey;

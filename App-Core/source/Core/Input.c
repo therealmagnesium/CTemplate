@@ -7,6 +7,6 @@ bool IsMouseDown(MouseButton button) { return Input.mouse.held && Input.mouse.bu
 
 bool IsMouseClicked(MouseButton button) { return Input.mouse.clicked && Input.mouse.button == button; }
 
-bool IsKeyDown(u32 scancode) { return Input.key.held && Input.key.scancode == scancode; }
+bool IsKeyDown(u32 scancode) { return Input.key.held[scancode] == true; }
 
-bool IsKeyPressed(u32 scancode) { return Input.key.pressed && Input.key.scancode == scancode; }
+bool IsKeyPressed(u32 scancode) { return Input.key.pressed[scancode] == true; }

@@ -1,6 +1,8 @@
 #pragma once
 #include "Core/Base.h"
-#include "Graphics/Color.h"
+#include "Graphics/Shader.h"
+
+#include <cglm/types.h>
 
 typedef struct VertexArray
 {
@@ -34,6 +36,9 @@ typedef struct InternalRenderState
     VertexArray vao;
     VertexBuffer vbo;
     IndexBuffer ebo;
+    Shader shader;
+
+    mat4 projection;
 } InternalRenderState;
 
 VertexArray CreateVertexArray();
@@ -41,4 +46,5 @@ VertexBuffer CreateVertexBuffer();
 IndexBuffer CreateIndexBuffer();
 InternalRenderState CreateInternalRenderState();
 
-void RenderInitRect(VertexBuffer* vbo, IndexBuffer* ebo, VertexArray* vao);
+void RenderInitRect(InternalRenderState* renderState);
+void RenderInitShaders(InternalRenderState* renderState);

@@ -10,6 +10,9 @@
 static void BindShader(u32 id) { glUseProgram(id); }
 static void UnbindShader() { glUseProgram(0); }
 
+static void SetVec4(s32 location, float* vec4) { glUniform4fv(location, 1, vec4); }
+static void SetMat4(s32 location, float* mat4) { glUniformMatrix4fv(location, 1, GL_FALSE, mat4); }
+
 static u32 CompileShader(u32 target, const char* path)
 {
     s32 success;
@@ -43,6 +46,8 @@ Shader CreateShader(const char* vertexPath, const char* fragmentPath)
     shader.id = glCreateProgram();
     shader.Bind = BindShader;
     shader.Unbind = UnbindShader;
+    shader.SetVec4 = SetVec4;
+    shader.SetMat4 = SetMat4;
 
     u32 vertex = CompileShader(GL_VERTEX_SHADER, vertexPath);
     u32 fragment = CompileShader(GL_FRAGMENT_SHADER, fragmentPath);
@@ -63,4 +68,10 @@ Shader CreateShader(const char* vertexPath, const char* fragmentPath)
     }
 
     return shader;
+}
+
+s32 GetUniformLocation(Shader* shader, const char* name)
+{
+    s32 location = glGetUniformLocation(shader->id, name);
+    return location;
 }

@@ -35,9 +35,9 @@ typedef uint64_t u64;
 
 typedef bool b8;
 
-typedef Vector2 vec2;
-typedef Vector3 vec3;
-typedef Vector4 vec4;
+typedef Vector2 v2;
+typedef Vector3 v3;
+typedef Vector4 v4;
 
 #define V2_FMT "<%.3f, %.3f>"
 #define V3_FMT "<%.3f, %.3f, %.3f>"

@@ -2,19 +2,24 @@
 #include "Graphics/Window.h"
 #include "Core/Base.h"
 #include "Core/Input.h"
+#include "Core/KeyCodes.h"
 #include "Core/Log.h"
 
+#include <SDL2/SDL_keyboard.h>
 #include <SDL2/SDL_video.h>
 #include <glad/glad.h>
 
 static void HandleEvents()
 {
     Input.mouse.clicked = false;
-    Input.key.pressed = false;
+
+    for (u8 i = 0; i < KEY_COUNT; i++)
+        Input.key.pressed[i] = false;
 
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
+
         switch (event.type)
         {
             case SDL_QUIT:
@@ -51,18 +56,18 @@ static void HandleEvents()
 
             case SDL_KEYDOWN:
             {
-                Input.key.pressed = !Input.key.held;
-                Input.key.held = true;
-                Input.key.scancode = event.key.keysym.scancode;
+                u8 currentKey = event.key.keysym.scancode;
+                Input.key.pressed[currentKey] = !Input.key.held[currentKey];
+                Input.key.held[event.key.keysym.scancode] = true;
 
                 break;
             }
 
             case SDL_KEYUP:
             {
-                Input.key.pressed = false;
-                Input.key.held = false;
-                Input.key.scancode = 0;
+                u8 currentKey = event.key.keysym.scancode;
+                Input.key.pressed[currentKey] = false;
+                Input.key.held[currentKey] = false;
 
                 break;
             }

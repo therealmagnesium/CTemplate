@@ -12,9 +12,8 @@ typedef struct MouseInputState
 
 typedef struct KeyboardInputState
 {
-    b8 held;
-    b8 pressed;
-    u32 scancode;
+    b8 held[KEY_COUNT];
+    b8 pressed[KEY_COUNT];
 } KeyboardInputState;
 
 typedef struct InputState

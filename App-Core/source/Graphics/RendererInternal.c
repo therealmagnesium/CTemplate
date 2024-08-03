@@ -1,7 +1,9 @@
 #include "Graphics/RendererInternal.h"
+#include "Core/Application.h"
 #include "Core/Base.h"
-#include "Graphics/Color.h"
+#include "Graphics/Shader.h"
 
+#include <cglm/cam.h>
 #include <glad/glad.h>
 
 #define VAO_STRIDE 3 * sizeof(float)
@@ -75,7 +77,7 @@ InternalRenderState CreateInternalRenderState()
     return renderState;
 }
 
-void RenderInitRect(VertexBuffer* vbo, IndexBuffer* ebo, VertexArray* vao)
+void RenderInitRect(InternalRenderState* renderState)
 {
     float vertices[] = {
         0.5f,  0.5f,  0.f, // v0
@@ -89,15 +91,30 @@ void RenderInitRect(VertexBuffer* vbo, IndexBuffer* ebo, VertexArray* vao)
         1, 2, 3, // i1
     };
 
-    vao->Bind(vao->id);
+    renderState->vao.Bind(renderState->vao.id);
 
-    vbo->Bind(vbo->id);
-    vbo->SetData(vertices, sizeof(vertices));
+    renderState->vbo.Bind(renderState->vbo.id);
+    renderState->vbo.SetData(vertices, sizeof(vertices));
 
-    ebo->Bind(ebo->id);
-    ebo->SetData(indices, sizeof(indices));
+    renderState->ebo.Bind(renderState->ebo.id);
+    renderState->ebo.SetData(indices, sizeof(indices));
 
-    vao->SetAttributes(0, 3, 0);
+    renderState->vao.SetAttributes(0, 3, 0);
 
-    vao->Unbind();
+    renderState->vao.Unbind();
+}
+
+void RenderInitShaders(InternalRenderState* renderState)
+{
+    renderState->shader = CreateShader("assets/shaders/default_vs.glsl", "assets/shaders/default_fs.glsl");
+    renderState->shader.uniformLocs[SHADER_LOC_MATRIX_PROJECTION] =
+        GetUniformLocation(&renderState->shader, "projection");
+    renderState->shader.uniformLocs[SHADER_LOC_MATRIX_MODEL] = GetUniformLocation(&renderState->shader, "model");
+    renderState->shader.uniformLocs[SHADER_LOC_COLOR_DIFFUSE] = GetUniformLocation(&renderState->shader, "tint");
+
+    glm_ortho(0.f, App.window.width, App.window.height, 0.f, -2.f, 2.f, renderState->projection);
+
+    renderState->shader.Bind(renderState->shader.id);
+    renderState->shader.SetMat4(renderState->shader.uniformLocs[SHADER_LOC_MATRIX_PROJECTION],
+                                (float*)renderState->projection);
 }
