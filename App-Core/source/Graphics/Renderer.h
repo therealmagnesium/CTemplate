@@ -2,7 +2,7 @@
 #include "Core/Math.h"
 #include "Graphics/Color.h"
 
-typedef struct RenderState
+typedef struct RenderState_t
 {
     Color clearColor;
 

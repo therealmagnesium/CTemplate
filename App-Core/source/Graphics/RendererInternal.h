@@ -4,7 +4,7 @@
 
 #include <cglm/types.h>
 
-typedef struct VertexArray
+typedef struct VertexArray_t
 {
     u32 id;
 
@@ -13,7 +13,7 @@ typedef struct VertexArray
     void (*SetAttributes)(u8 location, u8 numElements, u64 offset);
 } VertexArray;
 
-typedef struct VertexBuffer
+typedef struct VertexBuffer_t
 {
     u32 id;
 
@@ -22,7 +22,7 @@ typedef struct VertexBuffer
     void (*SetData)(float* vertices, u64 size);
 } VertexBuffer;
 
-typedef struct IndexBuffer
+typedef struct IndexBuffer_t
 {
     u32 id;
 
@@ -31,7 +31,7 @@ typedef struct IndexBuffer
     void (*SetData)(u32* indices, u64 size);
 } IndexBuffer;
 
-typedef struct InternalRenderState
+typedef struct InternalRenderState_t
 {
     VertexArray vao;
     VertexBuffer vbo;

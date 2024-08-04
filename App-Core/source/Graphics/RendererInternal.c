@@ -117,4 +117,5 @@ void RenderInitShaders(InternalRenderState* renderState)
     renderState->shader.Bind(renderState->shader.id);
     renderState->shader.SetMat4(renderState->shader.uniformLocs[SHADER_LOC_MATRIX_PROJECTION],
                                 (float*)renderState->projection);
+    renderState->shader.Unbind();
 }

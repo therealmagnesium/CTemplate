@@ -1,15 +1,16 @@
 #pragma once
 #include "Core/Base.h"
 #include "Graphics/Window.h"
+#include <nuklear.h>
 
-typedef struct AppInfo
+typedef struct AppInfo_t
 {
     u32 screenWidth;
     u32 screenHeight;
     const char* title;
 } AppInfo;
 
-typedef struct GameState
+typedef struct GameState_t
 {
     AppInfo info;
 
@@ -19,7 +20,7 @@ typedef struct GameState
     void (*OnRenderUI)(void);
 } GameState;
 
-typedef struct AppState
+typedef struct AppState_t
 {
     b8 isRunning;
     Window window;

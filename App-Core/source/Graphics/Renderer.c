@@ -1,11 +1,13 @@
 #include "Graphics/Renderer.h"
 #include "Graphics/RendererInternal.h"
 #include "Graphics/Color.h"
+#include "Graphics/Shader.h"
+
+#include "UI/UI.h"
 
 #include "Core/Application.h"
 #include "Core/Base.h"
 #include "Core/Log.h"
-#include "Graphics/Shader.h"
 
 #include <glad/glad.h>
 #include <cglm/types.h>
@@ -23,7 +25,11 @@ static void BeginDrawing()
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-static void EndDrawing() { SDL_GL_SwapWindow(App.window.handle); }
+static void EndDrawing()
+{
+    DrawUILayer();
+    SDL_GL_SwapWindow(App.window.handle);
+}
 
 static void DrawRectangle(v2 position, v2 size, Color color)
 {
@@ -37,12 +43,14 @@ static void DrawRectangle(v2 position, v2 size, Color color)
 
     Vector4 normalizedColor = NormalizeColor(color);
 
+    renderState.shader.Bind(renderState.shader.id);
     renderState.shader.SetMat4(renderState.shader.uniformLocs[SHADER_LOC_MATRIX_MODEL], (float*)model);
     renderState.shader.SetVec4(renderState.shader.uniformLocs[SHADER_LOC_COLOR_DIFFUSE], (float*)&normalizedColor);
 
     renderState.vao.Bind(renderState.vao.id);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
     renderState.vao.Unbind();
+    renderState.shader.Unbind();
 }
 
 void InitRenderer()

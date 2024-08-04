@@ -16,16 +16,20 @@ includedirs({
     "../App-Core/source",
     "../vendor/glad/include",
     "../vendor/cglm/",
+    "../vendor/nuklear/include",
 })
 
 libdirs({
     "../vendor/glad/lib",
+    "../vendor/nuklear/lib",
 })
 
 links({
     "App-Core",
     "SDL2",
     "glad",
+    "m",
+    "nuklear",
 })
 
 postbuildcommands({

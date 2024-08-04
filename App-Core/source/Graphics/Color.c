@@ -1,5 +1,6 @@
 #include "Graphics/Color.h"
 #include "Core/Base.h"
+#include "Core/Log.h"
 
 Color CreateColor(u8 r, u8 g, u8 b, u8 a)
 {
@@ -8,6 +9,17 @@ Color CreateColor(u8 r, u8 g, u8 b, u8 a)
     color.green = g;
     color.blue = b;
     color.alpha = a;
+
+    return color;
+}
+
+Color NormalizedToColor(const Vector4* normalized)
+{
+    Color color;
+    color.red = normalized->x * 255;
+    color.green = normalized->y * 255;
+    color.blue = normalized->z * 255;
+    color.alpha = normalized->w * 255;
 
     return color;
 }

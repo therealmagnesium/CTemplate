@@ -3,7 +3,7 @@
 
 #include <SDL2/SDL.h>
 
-struct AppInfo; // Forward declaration
+struct AppInfo_t; // Forward declaration
 
 typedef struct Window
 {
@@ -12,6 +12,7 @@ typedef struct Window
     b8 vsync;
     b8 fullscreen;
     const char* title;
+    void* glContext;
     SDL_Window* handle;
 
     void (*HandleEvents)(void);
@@ -19,4 +20,4 @@ typedef struct Window
 
 } Window;
 
-Window CreateWindow(struct AppInfo* info);
+Window CreateWindow(struct AppInfo_t* info);

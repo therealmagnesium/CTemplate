@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Base.h"
 
-typedef enum ShaderLocation
+typedef enum ShaderLocation_t
 {
     SHADER_LOC_MATRIX_PROJECTION = 0,
     SHADER_LOC_MATRIX_MODEL,

@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Base.h"
 
-typedef struct File
+typedef struct File_t
 {
     char* data;
     u64 length;

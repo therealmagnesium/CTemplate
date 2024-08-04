@@ -16,15 +16,19 @@ includedirs({
     "source",
     "../vendor/glad/include",
     "../vendor/cglm",
+    "../vendor/nuklear/include",
 })
 
 libdirs({
     "../vendor/glad/lib",
+    "../vendor/nuklear/lib",
 })
 
 links({
     "SDL2",
     "glad",
+    "m",
+    "nuklear",
 })
 
 filter("system:Unix")

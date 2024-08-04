@@ -1,10 +1,13 @@
 #include "Graphics/Window.h"
+
 #include "Core/Application.h"
 #include "Core/Base.h"
 #include "Core/Input.h"
 #include "Core/KeyCodes.h"
 #include "Core/Log.h"
 #include "Core/Time.h"
+
+#include "UI/UI.h"
 
 #include <SDL2/SDL_keyboard.h>
 #include <SDL2/SDL_video.h>
@@ -16,10 +19,11 @@ static void HandleEvents()
 
     Input.mouse.clicked = false;
 
-    for (u8 i = 0; i < KEY_COUNT; i++)
+    for (u32 i = 0; i < KEY_COUNT; i++)
         Input.key.pressed[i] = false;
 
     SDL_Event event;
+    BeginUIEventCheck();
     while (SDL_PollEvent(&event))
     {
         switch (event.type)
@@ -96,7 +100,9 @@ static void HandleEvents()
             default:
                 break;
         }
+        HandleUIEvents(&event);
     }
+    EndUIEventCheck();
 
     if (IsKeyPressed(KEY_ESCAPE))
         App.isRunning = false;
@@ -104,6 +110,7 @@ static void HandleEvents()
 
 static void Close()
 {
+    SDL_GL_DeleteContext(App.window.glContext);
     SDL_DestroyWindow(App.window.handle);
     SDL_Quit();
 }
@@ -122,6 +129,7 @@ Window CreateWindow(AppInfo* info)
     window.Close = Close;
 
     // Initialize SDL2
+    SDL_SetHint(SDL_HINT_VIDEO_HIGHDPI_DISABLED, "0");
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
         FATAL("Failed to init sdl2!");
@@ -132,9 +140,11 @@ Window CreateWindow(AppInfo* info)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
     // Create the window handle
-    s32 flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
+    s32 flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI;
     window.handle = SDL_CreateWindow(window.title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window.width,
                                      window.height, flags);
 
@@ -145,7 +155,7 @@ Window CreateWindow(AppInfo* info)
         return (Window){};
     }
 
-    void* glContext = SDL_GL_CreateContext(window.handle);
+    window.glContext = SDL_GL_CreateContext(window.handle);
     gladLoadGL();
 
     if (window.vsync)

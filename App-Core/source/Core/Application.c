@@ -7,6 +7,8 @@
 #include "Graphics/Window.h"
 #include "Graphics/Renderer.h"
 
+#include "UI/UI.h"
+
 #include <glad/glad.h>
 
 AppState App;
@@ -28,6 +30,7 @@ void CreateApplication(GameState* game)
     App.window = CreateWindow(&game->info);
 
     InitRenderer();
+    InitUI();
     App.game->OnCreate();
 
     initialized = true;
@@ -44,17 +47,18 @@ void RunApplication()
     {
         App.window.HandleEvents();
         App.game->OnUpdate();
+        App.game->OnRenderUI();
 
         Renderer.BeginDrawing();
         {
             App.game->OnRender();
-            App.game->OnRenderUI();
         }
         Renderer.EndDrawing();
-
         UpdateTimeLate();
     }
 
+    ShutdownUI();
     App.window.Close();
+
     INFO("Successfully ended the application!");
 }
