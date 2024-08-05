@@ -9,6 +9,6 @@ uniform sampler2D texture0;
 
 void main()
 {
-    vec4 texel = texture2D(texture0, fragTexCoords);
+    vec4 texel = texture(texture0, fragTexCoords);
     finalColor = texel;
 }

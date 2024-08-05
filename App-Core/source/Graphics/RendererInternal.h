@@ -1,5 +1,7 @@
 #pragma once
 #include "Core/Base.h"
+
+#include "Graphics/Mesh.h"
 #include "Graphics/Shader.h"
 
 #include <cglm/types.h>
@@ -33,11 +35,15 @@ typedef struct IndexBuffer_t
 
 typedef struct InternalRenderState_t
 {
-    VertexArray vao;
-    VertexBuffer vbo;
-    IndexBuffer ebo;
-    Shader shader;
+    VertexArray vaoRect;
+    VertexBuffer vboRect;
+    IndexBuffer eboRect;
 
+    VertexArray vaoMesh;
+    VertexBuffer vboMesh;
+    IndexBuffer eboMesh;
+
+    Shader defaultShader;
     mat4 projection;
 } InternalRenderState;
 
@@ -47,4 +53,5 @@ IndexBuffer CreateIndexBuffer();
 InternalRenderState CreateInternalRenderState();
 
 void RenderInitRect(InternalRenderState* renderState);
+void RenderInitMesh(InternalRenderState* renderState, const Mesh* mesh);
 void RenderInitShaders(InternalRenderState* renderState);

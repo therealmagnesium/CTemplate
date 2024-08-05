@@ -15,7 +15,6 @@
 #include <cglm/affine.h>
 
 RenderState Renderer;
-static InternalRenderState renderState;
 static bool initialized = false;
 
 static void BeginDrawing()
@@ -43,13 +42,15 @@ static void DrawRectangle(v2 position, v2 size, Color color)
 
     Vector4 normalizedColor = NormalizeColor(color);
 
-    renderState.shader.Bind(renderState.shader.id);
-    renderState.shader.SetMat4(renderState.shader.uniformLocs[SHADER_LOC_MATRIX_MODEL], (float*)model);
-    renderState.shader.SetVec4(renderState.shader.uniformLocs[SHADER_LOC_COLOR_DIFFUSE], (float*)&normalizedColor);
+    Renderer.state.defaultShader.Bind(Renderer.state.defaultShader.id);
+    Renderer.state.defaultShader.SetMat4(Renderer.state.defaultShader.uniformLocs[SHADER_LOC_MATRIX_MODEL],
+                                         (float*)model);
+    Renderer.state.defaultShader.SetVec4(Renderer.state.defaultShader.uniformLocs[SHADER_LOC_COLOR_DIFFUSE],
+                                         (float*)&normalizedColor);
 
-    renderState.vao.Bind(renderState.vao.id);
+    Renderer.state.vaoRect.Bind(Renderer.state.vaoRect.id);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
-    renderState.vao.Unbind();
+    Renderer.state.vaoRect.Unbind();
 }
 
 void InitRenderer()
@@ -65,9 +66,9 @@ void InitRenderer()
     Renderer.EndDrawing = EndDrawing;
     Renderer.DrawRectangle = DrawRectangle;
 
-    renderState = CreateInternalRenderState();
-    RenderInitShaders(&renderState);
-    RenderInitRect(&renderState);
+    Renderer.state = CreateInternalRenderState();
+    RenderInitShaders(&Renderer.state);
+    RenderInitRect(&Renderer.state);
 
     initialized = true;
 }

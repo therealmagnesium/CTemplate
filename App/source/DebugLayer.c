@@ -60,6 +60,7 @@ static void Template()
 
 void DrawDebugMenu()
 {
+    /*
     static struct nk_colorf clearColor = {0.f, 0.f, 0.f, 1.f};
     nk_begin(UI.context, "Debug Menu", nk_rect(450, 150, 230, 250),
              NK_WINDOW_BORDER | NK_WINDOW_MOVABLE | NK_WINDOW_SCALABLE | NK_WINDOW_MINIMIZABLE | NK_WINDOW_TITLE);
@@ -87,5 +88,6 @@ void DrawDebugMenu()
             Renderer.clearColor = NormalizedToColor(&finalClearColor);
         }
     }
-    nk_end(UI.context);
+    nk_end(UI.context);*/
+    Template();
 }
