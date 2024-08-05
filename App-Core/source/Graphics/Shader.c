@@ -10,6 +10,8 @@
 static void BindShader(u32 id) { glUseProgram(id); }
 static void UnbindShader() { glUseProgram(0); }
 
+static void SetInt(s32 location, s32 val) { glUniform1i(location, val); }
+static void SetVec2(s32 location, float* vec2) { glUniform2fv(location, 1, vec2); }
 static void SetVec4(s32 location, float* vec4) { glUniform4fv(location, 1, vec4); }
 static void SetMat4(s32 location, float* mat4) { glUniformMatrix4fv(location, 1, GL_FALSE, mat4); }
 
@@ -46,6 +48,8 @@ Shader CreateShader(const char* vertexPath, const char* fragmentPath)
     shader.id = glCreateProgram();
     shader.Bind = BindShader;
     shader.Unbind = UnbindShader;
+    shader.SetInt = SetInt;
+    shader.SetVec2 = SetVec2;
     shader.SetVec4 = SetVec4;
     shader.SetMat4 = SetMat4;
 

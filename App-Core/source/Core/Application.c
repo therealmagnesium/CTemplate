@@ -28,6 +28,7 @@ void CreateApplication(GameState* game)
     App.isRunning = true;
     App.game = game;
     App.window = CreateWindow(&game->info);
+    App.isDebugEnabled = false;
 
     InitRenderer();
     InitUI();

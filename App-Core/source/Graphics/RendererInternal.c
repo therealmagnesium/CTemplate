@@ -6,7 +6,7 @@
 #include <cglm/cam.h>
 #include <glad/glad.h>
 
-#define VAO_STRIDE 3 * sizeof(float)
+#define VAO_STRIDE 5 * sizeof(float)
 
 static void BindVertexArray(s32 vaoId) { glBindVertexArray(vaoId); }
 static void UnbindVertexArray() { glBindVertexArray(0); }
@@ -80,15 +80,15 @@ InternalRenderState CreateInternalRenderState()
 void RenderInitRect(InternalRenderState* renderState)
 {
     float vertices[] = {
-        0.5f,  0.5f,  0.f, // v0
-        0.5f,  -0.5f, 0.f, // v1
-        -0.5f, -0.5f, 0.f, // v2
-        -0.5f, 0.5f,  0.f, // v3
+        0.5f,  0.5f,  0.f, 1.f, 1.f, // v0
+        0.5f,  -0.5f, 0.f, 1.f, 0.f, // v1
+        -0.5f, -0.5f, 0.f, 0.f, 0.f, // v2
+        -0.5f, 0.5f,  0.f, 0.f, 1.f  // v3
     };
 
     u32 indices[] = {
         0, 1, 3, // i0
-        1, 2, 3, // i1
+        1, 2, 3, // i1 };
     };
 
     renderState->vao.Bind(renderState->vao.id);
@@ -100,22 +100,25 @@ void RenderInitRect(InternalRenderState* renderState)
     renderState->ebo.SetData(indices, sizeof(indices));
 
     renderState->vao.SetAttributes(0, 3, 0);
+    renderState->vao.SetAttributes(1, 2, sizeof(float) * 3);
 
     renderState->vao.Unbind();
 }
 
 void RenderInitShaders(InternalRenderState* renderState)
 {
+    // Create default shader and set uniform locations
     renderState->shader = CreateShader("assets/shaders/default_vs.glsl", "assets/shaders/default_fs.glsl");
     renderState->shader.uniformLocs[SHADER_LOC_MATRIX_PROJECTION] =
         GetUniformLocation(&renderState->shader, "projection");
     renderState->shader.uniformLocs[SHADER_LOC_MATRIX_MODEL] = GetUniformLocation(&renderState->shader, "model");
     renderState->shader.uniformLocs[SHADER_LOC_COLOR_DIFFUSE] = GetUniformLocation(&renderState->shader, "tint");
+    renderState->shader.uniformLocs[SHADER_LOC_MAP_DIFFUSE] = GetUniformLocation(&renderState->shader, "texture0");
 
     glm_ortho(0.f, App.window.width, App.window.height, 0.f, -2.f, 2.f, renderState->projection);
 
     renderState->shader.Bind(renderState->shader.id);
     renderState->shader.SetMat4(renderState->shader.uniformLocs[SHADER_LOC_MATRIX_PROJECTION],
                                 (float*)renderState->projection);
-    renderState->shader.Unbind();
+    renderState->shader.SetInt(renderState->shader.uniformLocs[SHADER_LOC_MAP_DIFFUSE], 0);
 }

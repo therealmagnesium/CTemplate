@@ -3,7 +3,11 @@
 #include <Core/Input.h>
 #include <Core/Log.h>
 #include <Core/Time.h>
+
 #include <Graphics/Renderer.h>
+#include <Graphics/Texture.h>
+
+#include <glad/glad.h>
 
 void UpdatePlayer(Player* player)
 {
@@ -17,7 +21,11 @@ void UpdatePlayer(Player* player)
     player->position.y += player->velocity.y * Time.delta;
 }
 
-void DrawPlayer(Player* player) { Renderer.DrawRectangle(player->position, player->size, player->color); }
+void DrawPlayer(Player* player)
+{
+    BindTexture(&player->texture, 0);
+    Renderer.DrawRectangle(player->position, player->size, player->color);
+}
 
 Player CreatePlayer()
 {
@@ -27,8 +35,9 @@ Player CreatePlayer()
     player.position = (v2){200.f, 200.f};
     player.velocity = (v2){0.f, 0.f};
     player.direction = (v2){0.f, 0.f};
-    player.size = (v2){64.f, 64.f};
+    player.size = (v2){200.f, 200.f};
     player.color = CreateColor(0x55, 0xBA, 0xA1, 0xFF);
+    player.texture = LoadTexture("assets/textures/small_checker.png", GL_RGB);
 
     return player;
 }

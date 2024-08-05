@@ -1,9 +1,14 @@
-#version 330 core
+#version 450 core
 out vec4 finalColor;
 
+in vec3 fragPosition;
+in vec2 fragTexCoords;
+
 uniform vec4 tint;
+uniform sampler2D texture0;
 
 void main()
 {
-    finalColor = tint;
+    vec4 texel = texture2D(texture0, fragTexCoords);
+    finalColor = texel;
 }

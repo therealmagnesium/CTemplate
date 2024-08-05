@@ -2,6 +2,7 @@
 #include "Player.h"
 #include "DebugLayer.h"
 
+#include <Core/Application.h>
 #include <Core/Base.h>
 #include <Core/Input.h>
 #include <Core/IO.h>
@@ -15,9 +16,6 @@
 
 #include <UI/UI.h>
 
-#include <SDL2/SDL.h>
-#include <nuklear.h>
-
 static Player player;
 
 static void OnCreate()
@@ -26,11 +24,21 @@ static void OnCreate()
     player = CreatePlayer();
 }
 
-static void OnUpdate() { UpdatePlayer(&player); }
+static void OnUpdate()
+{
+    UpdatePlayer(&player);
+
+    if (IsKeyPressed(KEY_F9))
+        App.isDebugEnabled = !App.isDebugEnabled;
+}
 
 static void OnRender() { DrawPlayer(&player); }
 
-static void OnRenderUI() { DrawDebugMenu(); }
+static void OnRenderUI()
+{
+    if (App.isDebugEnabled)
+        DrawDebugMenu();
+}
 
 Game SetupGame()
 {

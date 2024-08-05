@@ -1,6 +1,7 @@
 #pragma once
-#include "Core/Math.h"
-#include "Graphics/Color.h"
+#include <Core/Math.h>
+#include <Graphics/Color.h>
+#include <Graphics/Texture.h>
 
 typedef struct Player_t
 {
@@ -10,6 +11,7 @@ typedef struct Player_t
     Vector2 velocity;
     Vector2 size;
     Color color;
+    Texture texture;
 } Player;
 
 Player CreatePlayer();

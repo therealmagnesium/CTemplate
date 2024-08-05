@@ -50,7 +50,6 @@ static void DrawRectangle(v2 position, v2 size, Color color)
     renderState.vao.Bind(renderState.vao.id);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
     renderState.vao.Unbind();
-    renderState.shader.Unbind();
 }
 
 void InitRenderer()

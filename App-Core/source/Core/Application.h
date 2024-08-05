@@ -23,6 +23,7 @@ typedef struct GameState_t
 typedef struct AppState_t
 {
     b8 isRunning;
+    b8 isDebugEnabled;
     Window window;
     GameState* game;
 } AppState;
