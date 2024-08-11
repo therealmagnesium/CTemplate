@@ -3,7 +3,7 @@
 
 typedef struct List_t
 {
-    void* data;
+    u8* data;
     u64 capacity;
     u64 itemSize;
 } List;

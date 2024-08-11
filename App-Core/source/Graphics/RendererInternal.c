@@ -110,7 +110,7 @@ void RenderInitRect(InternalRenderState* renderState)
     renderState->vboRect.SetData((void*)vertices, sizeof(vertices));
 
     renderState->eboRect.Bind(renderState->eboRect.id);
-    renderState->eboRect.SetData(indices, sizeof(indices));
+    renderState->eboRect.SetData((void*)indices, sizeof(indices));
 
     renderState->vaoRect.SetAttributes(0, 3, 0);
     renderState->vaoRect.SetAttributes(1, 2, sizeof(float) * 3);
@@ -124,10 +124,10 @@ void RenderInitMesh(InternalRenderState* renderState, const Mesh* mesh)
     renderState->vaoMesh.Bind(renderState->vaoMesh.id);
 
     renderState->vboMesh.Bind(renderState->vboMesh.id);
-    renderState->vboMesh.SetData(mesh->vertices.data, mesh->vertices.itemSize * mesh->vertices.capacity);
+    renderState->vboMesh.SetData((void*)mesh->vertices.data, mesh->vertices.itemSize * mesh->vertices.capacity);
 
     renderState->eboMesh.Bind(renderState->eboMesh.id);
-    renderState->eboMesh.SetData(mesh->indices.data, mesh->indices.itemSize * mesh->indices.capacity);
+    renderState->eboMesh.SetData((void*)mesh->indices.data, mesh->indices.itemSize * mesh->indices.capacity);
 
     renderState->vaoMesh.SetAttributes(0, 3, 0);
     renderState->vaoMesh.SetAttributes(1, 2, sizeof(float) * 3);

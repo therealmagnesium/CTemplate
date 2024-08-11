@@ -16,4 +16,5 @@ typedef struct Mesh_t
     List indices;
 } Mesh;
 
-Mesh CreateMesh(const List* vertices, const List* indices);
+Mesh CreateMesh(const Vertex* vertices, u64 vertexCount, const u32* indices, u64 indexCount);
+void UnloadMesh(Mesh* mesh);

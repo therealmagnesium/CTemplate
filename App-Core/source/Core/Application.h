@@ -18,6 +18,7 @@ typedef struct GameState_t
     void (*OnUpdate)(void);
     void (*OnRender)(void);
     void (*OnRenderUI)(void);
+    void (*OnShutdown)(void);
 } GameState;
 
 typedef struct AppState_t

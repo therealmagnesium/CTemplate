@@ -17,4 +17,5 @@ void CreateGameState(GameState* gameState)
     gameState->OnUpdate = game.OnUpdate;
     gameState->OnRender = game.OnRender;
     gameState->OnRenderUI = game.OnRenderUI;
+    gameState->OnShutdown = game.OnShutdown;
 }

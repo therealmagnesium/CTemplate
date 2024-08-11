@@ -7,6 +7,7 @@ typedef struct Game
     void (*OnUpdate)(void);
     void (*OnRender)(void);
     void (*OnRenderUI)(void);
+    void (*OnShutdown)(void);
 } Game;
 
 Game SetupGame();

@@ -58,6 +58,7 @@ void RunApplication()
         UpdateTimeLate();
     }
 
+    App.game->OnShutdown();
     ShutdownUI();
     App.window.Close();
 

@@ -11,6 +11,7 @@
 #include <Core/Math.h>
 
 #include <Graphics/Color.h>
+#include <Graphics/Mesh.h>
 #include <Graphics/Renderer.h>
 #include <Graphics/Shader.h>
 
@@ -40,6 +41,8 @@ static void OnRenderUI()
         DrawDebugMenu();
 }
 
+static void OnShutdown() { UnloadMesh(&player.mesh); }
+
 Game SetupGame()
 {
     Game game;
@@ -49,6 +52,7 @@ Game SetupGame()
     game.OnUpdate = OnUpdate;
     game.OnRender = OnRender;
     game.OnRenderUI = OnRenderUI;
+    game.OnShutdown = OnShutdown;
 
     return game;
 }

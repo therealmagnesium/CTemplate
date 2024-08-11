@@ -1,5 +1,7 @@
 #include "Core/List.h"
 #include "Core/Base.h"
+#include "Core/Log.h"
+
 #include <stdlib.h>
 
 List CreateList(u64 capacity, u64 itemSize)
