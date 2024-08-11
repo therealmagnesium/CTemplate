@@ -4,44 +4,20 @@
 #include <Core/Log.h>
 #include <Core/Time.h>
 
+#include <Graphics/Material.h>
 #include <Graphics/Renderer.h>
 #include <Graphics/Texture.h>
 #include <Graphics/Mesh.h>
 
-#include <glad/glad.h>
+#include <stdlib.h>
+#include <cglm/cglm.h>
 
 static Mesh test;
+static Material material;
+static mat4 transform;
 
-void UpdatePlayer(Player* player)
+static void CreatePlayerMesh()
 {
-    player->direction.x = GetInputAxis(INPUT_AXIS_HORIZONTAL);
-    player->direction.y = GetInputAxis(INPUT_AXIS_VERTICAL);
-    NormalizeV2(&player->direction);
-    player->velocity.x = player->speed * player->direction.x;
-    player->velocity.y = player->speed * player->direction.y;
-
-    player->position.x += player->velocity.x * Time.delta;
-    player->position.y += player->velocity.y * Time.delta;
-}
-
-void DrawPlayer(Player* player)
-{
-    BindTexture(&player->texture, 0);
-    Renderer.DrawRectangle(player->position, player->size, player->color);
-}
-
-Player CreatePlayer()
-{
-    Player player;
-
-    player.speed = 800.f;
-    player.position = (v2){200.f, 200.f};
-    player.velocity = (v2){0.f, 0.f};
-    player.direction = (v2){0.f, 0.f};
-    player.size = (v2){200.f, 200.f};
-    player.color = CreateColor(0x55, 0xBA, 0xA1, 0xFF);
-    player.texture = LoadTexture("assets/textures/small_checker.png", GL_RGB);
-
     Vertex vertices[4];
     vertices[0].position = (v3){0.5f, 0.5f, 0.f};
     vertices[1].position = (v3){0.5f, -0.5f, 0.f};
@@ -61,7 +37,54 @@ Player CreatePlayer()
         1, 2, 3, // i1
     };
 
-    test = CreateMesh(vertices, indices, &player.texture);
+    List vList, iList;
+    vList.data = vertices;
+    vList.itemSize = sizeof(Vertex);
+    vList.capacity = 4;
+
+    iList.data = indices;
+    iList.itemSize = sizeof(u32);
+    iList.capacity = 6;
+
+    test = CreateMesh(&vList, &iList);
+    material.maps[MATERIAL_MAP_DIFFUSE].texture = LoadTexture("assets/textures/small_checker.png", RGB);
+    material.shader = Renderer.state.defaultShader;
+}
+
+void UpdatePlayer(Player* player)
+{
+    player->direction.x = GetInputAxis(INPUT_AXIS_HORIZONTAL);
+    player->direction.y = GetInputAxis(INPUT_AXIS_VERTICAL);
+    NormalizeV2(&player->direction);
+    player->velocity.x = player->speed * player->direction.x;
+    player->velocity.y = player->speed * player->direction.y;
+
+    player->position.x += player->velocity.x * Time.delta;
+    player->position.y += player->velocity.y * Time.delta;
+}
+
+void DrawPlayer(Player* player)
+{
+    glm_mat4_identity(transform);
+    glm_translate(transform, (float*)&player->position);
+    glm_scale(transform, (float*)&player->size);
+    Renderer.DrawMesh(&test, &transform, &material);
+
+    // Renderer.DrawRectangle(player->position, player->size, player->color);
+}
+
+Player CreatePlayer()
+{
+    Player player;
+
+    player.speed = 800.f;
+    player.position = (v3){200.f, 200.f, 0.f};
+    player.size = (v3){200.f, 200.f, 0.f};
+    player.velocity = (v2){0.f, 0.f};
+    player.direction = (v2){0.f, 0.f};
+    player.color = CreateColor(0xFF, 0xFF, 0xFF, 0xFF);
+
+    CreatePlayerMesh();
 
     return player;
 }

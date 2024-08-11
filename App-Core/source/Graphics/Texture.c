@@ -1,6 +1,8 @@
 #include "Graphics/Texture.h"
+
 #include "Core/Base.h"
 #include "Core/Log.h"
+
 #include <glad/glad.h>
 #include <stb_image.h>
 
@@ -25,10 +27,12 @@ Texture LoadTexture(const char* path, u32 format)
         return (Texture){.isValid = false};
     }
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.width, texture.height, 0, format, GL_UNSIGNED_BYTE, data);
+    u32 glFormat = (format == RGB) ? GL_RGB : GL_RGBA;
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture.width, texture.height, 0, glFormat, GL_UNSIGNED_BYTE, data);
     glGenerateMipmap(GL_TEXTURE_2D);
     texture.isValid = true;
 
+    glBindTexture(GL_TEXTURE_2D, 0);
     stbi_image_free(data);
 
     INFO("Successfully loaded texture %s!", path);

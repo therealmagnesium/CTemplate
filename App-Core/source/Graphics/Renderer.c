@@ -3,6 +3,7 @@
 #include "Graphics/Color.h"
 #include "Graphics/Shader.h"
 
+#include "Graphics/Texture.h"
 #include "UI/UI.h"
 
 #include "Core/Application.h"
@@ -33,7 +34,7 @@ static void EndDrawing()
 static void DrawRectangle(v2 position, v2 size, Color color)
 {
     v3 p = {position.x, position.y, 0.f};
-    v3 s = {size.x, size.y, 0.f};
+    v3 s = {size.x, size.y, 1.f};
 
     mat4 model;
     glm_mat4_identity(model);
@@ -53,6 +54,30 @@ static void DrawRectangle(v2 position, v2 size, Color color)
     Renderer.state.vaoRect.Unbind();
 }
 
+static void DrawMesh(const Mesh* mesh, const mat4* transform, Material* material)
+{
+    if (material->shader.id == 0)
+        material->shader = Renderer.state.defaultShader;
+
+    material->shader.Bind(material->shader.id);
+    material->shader.SetMat4(material->shader.uniformLocs[SHADER_LOC_MATRIX_MODEL], (float*)transform);
+
+    material->shader.SetVec4(Renderer.state.defaultShader.uniformLocs[SHADER_LOC_COLOR_DIFFUSE],
+                             (float[4]){1.f, 1.f, 1.f, 1.f});
+
+    for (u32 i = 0; i < MATERIAL_MAP_COUNT; i++)
+    {
+        material->shader.SetInt(material->shader.uniformLocs[i], i);
+
+        if (material->maps[i].texture.isValid)
+            BindTexture(&material->maps[i].texture, i);
+    }
+
+    Renderer.state.vaoMesh.Bind(Renderer.state.vaoMesh.id);
+    glDrawElements(GL_TRIANGLES, mesh->indices.capacity, GL_UNSIGNED_INT, NULL);
+    Renderer.state.vaoMesh.Unbind();
+}
+
 void InitRenderer()
 {
     if (initialized)
@@ -65,6 +90,7 @@ void InitRenderer()
     Renderer.BeginDrawing = BeginDrawing;
     Renderer.EndDrawing = EndDrawing;
     Renderer.DrawRectangle = DrawRectangle;
+    Renderer.DrawMesh = DrawMesh;
 
     Renderer.state = CreateInternalRenderState();
     RenderInitShaders(&Renderer.state);

@@ -4,11 +4,17 @@ out vec4 finalColor;
 in vec3 fragPosition;
 in vec2 fragTexCoords;
 
+struct Material
+{
+    sampler2D diffuseMap;
+};
+
 uniform vec4 tint;
-uniform sampler2D texture0;
+uniform Material material;
 
 void main()
 {
-    vec4 texel = texture(texture0, fragTexCoords);
-    finalColor = texel;
+    vec3 texel = texture(material.diffuseMap, fragTexCoords).xyz;
+    vec3 result = texel * tint.xyz;
+    finalColor = vec4(result, 1.f);
 }

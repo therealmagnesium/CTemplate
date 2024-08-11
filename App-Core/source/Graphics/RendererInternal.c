@@ -1,5 +1,6 @@
 #include "Graphics/RendererInternal.h"
 #include "Core/List.h"
+#include "Core/Log.h"
 #include "Graphics/Mesh.h"
 #include "Graphics/Shader.h"
 
@@ -123,10 +124,10 @@ void RenderInitMesh(InternalRenderState* renderState, const Mesh* mesh)
     renderState->vaoMesh.Bind(renderState->vaoMesh.id);
 
     renderState->vboMesh.Bind(renderState->vboMesh.id);
-    renderState->vboMesh.SetData(mesh->vertices.data, mesh->vertices.itemSize);
+    renderState->vboMesh.SetData(mesh->vertices.data, mesh->vertices.itemSize * mesh->vertices.capacity);
 
     renderState->eboMesh.Bind(renderState->eboMesh.id);
-    renderState->eboMesh.SetData(mesh->indices.data, mesh->indices.itemSize);
+    renderState->eboMesh.SetData(mesh->indices.data, mesh->indices.itemSize * mesh->indices.capacity);
 
     renderState->vaoMesh.SetAttributes(0, 3, 0);
     renderState->vaoMesh.SetAttributes(1, 2, sizeof(float) * 3);
@@ -146,12 +147,11 @@ void RenderInitShaders(InternalRenderState* renderState)
     renderState->defaultShader.uniformLocs[SHADER_LOC_COLOR_DIFFUSE] =
         GetUniformLocation(&renderState->defaultShader, "tint");
     renderState->defaultShader.uniformLocs[SHADER_LOC_MAP_DIFFUSE] =
-        GetUniformLocation(&renderState->defaultShader, "texture0");
+        GetUniformLocation(&renderState->defaultShader, "material.diffuseMap");
 
     glm_ortho(0.f, App.window.width, App.window.height, 0.f, -2.f, 2.f, renderState->projection);
 
     renderState->defaultShader.Bind(renderState->defaultShader.id);
     renderState->defaultShader.SetMat4(renderState->defaultShader.uniformLocs[SHADER_LOC_MATRIX_PROJECTION],
                                        (float*)renderState->projection);
-    renderState->defaultShader.SetInt(renderState->defaultShader.uniformLocs[SHADER_LOC_MAP_DIFFUSE], 0);
 }

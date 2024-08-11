@@ -1,16 +1,13 @@
 #include "Graphics/Mesh.h"
 #include "Graphics/Renderer.h"
-#include "Graphics/Texture.h"
 
 #include "Core/Base.h"
-#include "Core/Math.h"
 
-Mesh CreateMesh(Vertex* vertices, u32* indices, Texture* textures)
+Mesh CreateMesh(const List* vertices, const List* indices)
 {
     Mesh mesh;
-    mesh.vertices.data = vertices;
-    mesh.indices.data = indices;
-    mesh.textures.data = textures;
+    mesh.vertices = *vertices;
+    mesh.indices = *indices;
 
     RenderInitMesh(&Renderer.state, &mesh);
 
