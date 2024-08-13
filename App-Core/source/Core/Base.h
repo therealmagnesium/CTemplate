@@ -22,4 +22,6 @@ typedef bool b8;
 #define V3_OPEN(v) v.x, v.y, v.z
 #define V4_OPEN(v) v.x, v.y, v.z, v.w
 
+#define V3FP_OPEN(v) v[0], v[1], v[2]
+
 #define LEN(array) sizeof(array) / sizeof(array[0])

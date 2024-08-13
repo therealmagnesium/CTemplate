@@ -22,7 +22,7 @@ float GetInputAxis(InputAxis axis)
 
         case INPUT_AXIS_VERTICAL:
         {
-            val = IsKeyDown(KEY_DOWN) - IsKeyDown(KEY_UP);
+            val = IsKeyDown(KEY_UP) - IsKeyDown(KEY_DOWN);
             break;
         }
     }

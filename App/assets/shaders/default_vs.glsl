@@ -7,11 +7,12 @@ out vec3 fragPosition;
 out vec2 fragTexCoords;
 
 uniform mat4 model;
+uniform mat4 view;
 uniform mat4 projection;
 
 void main()
 {
     fragPosition = position;
     fragTexCoords = texCoords;
-    gl_Position = projection * model * vec4(position, 1.f);
+    gl_Position = projection * view * model * vec4(position, 1.f);
 }

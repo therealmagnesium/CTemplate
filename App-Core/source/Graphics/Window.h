@@ -5,7 +5,7 @@
 
 struct AppInfo_t; // Forward declaration
 
-typedef struct Window
+typedef struct Window_t
 {
     u16 width;
     u16 height;

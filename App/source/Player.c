@@ -3,8 +3,10 @@
 #include <Core/Input.h>
 #include <Core/List.h>
 #include <Core/Log.h>
+#include <Core/Math.h>
 #include <Core/Time.h>
 
+#include <Graphics/Color.h>
 #include <Graphics/Material.h>
 #include <Graphics/Renderer.h>
 #include <Graphics/Texture.h>
@@ -53,14 +55,15 @@ void UpdatePlayer(Player* player)
     player->velocity.y = player->speed * player->direction.y;
 
     player->position.x += player->velocity.x * Time.delta;
-    player->position.y += player->velocity.y * Time.delta;
+    player->position.z -= player->velocity.y * Time.delta;
 }
 
 void DrawPlayer(Player* player)
 {
     glm_mat4_identity(transform);
-    glm_translate(transform, (float*)&player->position);
-    glm_scale(transform, (float*)&player->size);
+    glm_translate(transform, ValuePointerV3(&player->position));
+    glm_rotate(transform, glm_rad(player->rotationAngle), ValuePointerV3(&player->rotationAxis));
+    glm_scale(transform, ValuePointerV3(&player->scale));
 
     Renderer.DrawMesh(&player->mesh, &transform, &material);
 }
@@ -69,9 +72,12 @@ Player CreatePlayer()
 {
     Player player;
 
-    player.speed = 800.f;
-    player.position = (v3){200.f, 200.f, 0.f};
-    player.size = (v3){200.f, 200.f, 0.f};
+    player.position = (v3){0.f, 0.f, 0.f};
+    player.scale = (v3){2.f, 2.f, 1.f};
+    player.rotationAxis = (v3){1.f, 0.f, 0.f};
+    player.rotationAngle = -55.f;
+    player.speed = 3.f;
+
     player.velocity = (v2){0.f, 0.f};
     player.direction = (v2){0.f, 0.f};
 

@@ -10,6 +10,7 @@
 #include <Core/Log.h>
 #include <Core/Math.h>
 
+#include <Graphics/Camera.h>
 #include <Graphics/Color.h>
 #include <Graphics/Mesh.h>
 #include <Graphics/Renderer.h>
@@ -18,9 +19,13 @@
 #include <UI/UI.h>
 
 static Player player;
+static Camera camera;
 
 static void OnCreate()
 {
+    camera = CreateCamera((vec3){0.f, 0.f, 2.f}, (vec3){0.f, 0.f, 0.f}, (vec3){0.f, 1.f, 0.f}, 45.f);
+    SetPrimaryCamera(&camera);
+
     Renderer.clearColor = CreateColor(20, 20, 20, 255);
     player = CreatePlayer();
 }

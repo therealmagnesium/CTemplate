@@ -1,9 +1,10 @@
 #include "Graphics/Renderer.h"
+#include "Graphics/Camera.h"
 #include "Graphics/RendererInternal.h"
 #include "Graphics/Color.h"
 #include "Graphics/Shader.h"
-
 #include "Graphics/Texture.h"
+
 #include "UI/UI.h"
 
 #include "Core/Application.h"
@@ -11,9 +12,7 @@
 #include "Core/Log.h"
 
 #include <glad/glad.h>
-#include <cglm/types.h>
-#include <cglm/mat4.h>
-#include <cglm/affine.h>
+#include <cglm/cglm.h>
 
 RenderState Renderer;
 static bool initialized = false;
@@ -22,7 +21,9 @@ static void BeginDrawing()
 {
     Vector4 normalizedClearColor = NormalizeColor(Renderer.clearColor);
     glClearColor(V4_OPEN(normalizedClearColor));
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    UpdateCameraMatrices(Renderer.state.primaryCamera);
 }
 
 static void EndDrawing()
@@ -31,10 +32,10 @@ static void EndDrawing()
     SDL_GL_SwapWindow(App.window.handle);
 }
 
-static void DrawRectangle(v2 position, v2 size, Color color)
+static void DrawRectangle(vec2 position, vec2 size, Color color)
 {
-    v3 p = {position.x, position.y, 0.f};
-    v3 s = {size.x, size.y, 1.f};
+    v3 p = {position[0], position[1], 0.f};
+    v3 s = {size[0], size[1], 1.f};
 
     mat4 model;
     glm_mat4_identity(model);

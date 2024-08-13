@@ -6,9 +6,12 @@
 
 typedef struct Player_t
 {
-    float speed;
     Vector3 position;
-    Vector3 size;
+    Vector3 scale;
+    Vector3 rotationAxis;
+    float rotationAngle;
+    float speed;
+
     Vector2 direction;
     Vector2 velocity;
     Mesh mesh;

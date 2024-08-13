@@ -1,6 +1,7 @@
 #pragma once
 #include "Core/Base.h"
 
+#include "Graphics/Camera.h"
 #include "Graphics/Mesh.h"
 #include "Graphics/Shader.h"
 
@@ -44,7 +45,7 @@ typedef struct InternalRenderState_t
     IndexBuffer eboMesh;
 
     Shader defaultShader;
-    mat4 projection;
+    Camera* primaryCamera;
 } InternalRenderState;
 
 VertexArray CreateVertexArray();

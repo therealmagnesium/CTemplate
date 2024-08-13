@@ -80,6 +80,8 @@ InternalRenderState CreateInternalRenderState()
     renderState.vboMesh = CreateVertexBuffer();
     renderState.eboMesh = CreateIndexBuffer();
 
+    renderState.primaryCamera = NULL;
+
     return renderState;
 }
 
@@ -140,18 +142,24 @@ void RenderInitShaders(InternalRenderState* renderState)
 {
     // Create default shader and set uniform locations
     renderState->defaultShader = CreateShader("assets/shaders/default_vs.glsl", "assets/shaders/default_fs.glsl");
+
+    if (renderState->defaultShader.id == 0)
+    {
+        INFO("Failed to init default shader... Exiting the program!");
+        App.isRunning = false;
+        return;
+    }
+
     renderState->defaultShader.uniformLocs[SHADER_LOC_MATRIX_PROJECTION] =
         GetUniformLocation(&renderState->defaultShader, "projection");
+    renderState->defaultShader.uniformLocs[SHADER_LOC_MATRIX_VIEW] =
+        GetUniformLocation(&renderState->defaultShader, "view");
     renderState->defaultShader.uniformLocs[SHADER_LOC_MATRIX_MODEL] =
         GetUniformLocation(&renderState->defaultShader, "model");
     renderState->defaultShader.uniformLocs[SHADER_LOC_COLOR_DIFFUSE] =
-        GetUniformLocation(&renderState->defaultShader, "tint");
+        GetUniformLocation(&renderState->defaultShader, "material.diffuse");
     renderState->defaultShader.uniformLocs[SHADER_LOC_MAP_DIFFUSE] =
         GetUniformLocation(&renderState->defaultShader, "material.diffuseMap");
 
-    glm_ortho(0.f, App.window.width, App.window.height, 0.f, -2.f, 2.f, renderState->projection);
-
     renderState->defaultShader.Bind(renderState->defaultShader.id);
-    renderState->defaultShader.SetMat4(renderState->defaultShader.uniformLocs[SHADER_LOC_MATRIX_PROJECTION],
-                                       (float*)renderState->projection);
 }

@@ -32,7 +32,11 @@ void CreateApplication(GameState* game)
 
     InitRenderer();
     InitUI();
+
     App.game->OnCreate();
+
+    if (!Renderer.state.primaryCamera)
+        WARN("No primary camera set, nothing may be drawn to the window!");
 
     initialized = true;
 

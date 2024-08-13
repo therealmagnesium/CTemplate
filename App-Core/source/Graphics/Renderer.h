@@ -16,10 +16,11 @@ typedef struct RenderState_t
 
     void (*BeginDrawing)(void);
     void (*EndDrawing)(void);
-    void (*DrawRectangle)(v2 position, v2 size, Color color);
+    void (*DrawRectangle)(vec2 position, vec2 size, Color color);
     void (*DrawMesh)(const Mesh* mesh, const mat4* transform, Material* material);
 } RenderState;
 
 extern RenderState Renderer;
 
 void InitRenderer();
+inline void SetPrimaryCamera(Camera* camera) { Renderer.state.primaryCamera = camera; }
