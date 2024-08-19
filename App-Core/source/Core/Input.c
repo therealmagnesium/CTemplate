@@ -29,3 +29,25 @@ float GetInputAxis(InputAxis axis)
 
     return val;
 }
+
+float GetInputAxisAlt(InputAxis axis)
+{
+    float val = 0.f;
+
+    switch (axis)
+    {
+        case INPUT_AXIS_HORIZONTAL:
+        {
+            val = IsKeyDown(KEY_D) - IsKeyDown(KEY_A);
+            break;
+        }
+
+        case INPUT_AXIS_VERTICAL:
+        {
+            val = IsKeyDown(KEY_W) - IsKeyDown(KEY_S);
+            break;
+        }
+    }
+
+    return val;
+}

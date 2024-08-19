@@ -23,7 +23,7 @@ static void BeginDrawing()
     glClearColor(V4_OPEN(normalizedClearColor));
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    UpdateCameraMatrices(Renderer.state.primaryCamera);
+    UpdateCameraMatrices();
 }
 
 static void EndDrawing()
@@ -53,6 +53,7 @@ static void DrawRectangle(vec2 position, vec2 size, Color color)
     Renderer.state.vaoRect.Bind(Renderer.state.vaoRect.id);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
     Renderer.state.vaoRect.Unbind();
+    Renderer.state.defaultShader.Unbind();
 }
 
 static void DrawMesh(const Mesh* mesh, const mat4* transform, Material* material)
@@ -77,6 +78,7 @@ static void DrawMesh(const Mesh* mesh, const mat4* transform, Material* material
     Renderer.state.vaoMesh.Bind(Renderer.state.vaoMesh.id);
     glDrawElements(GL_TRIANGLES, mesh->indices.capacity, GL_UNSIGNED_INT, NULL);
     Renderer.state.vaoMesh.Unbind();
+    material->shader.Unbind();
 }
 
 void InitRenderer()

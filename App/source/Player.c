@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "cglm/vec3.h"
 
 #include <Core/Input.h>
 #include <Core/List.h>
@@ -48,22 +49,23 @@ static void CreatePlayerMesh(Player* player)
 
 void UpdatePlayer(Player* player)
 {
-    player->direction.x = GetInputAxis(INPUT_AXIS_HORIZONTAL);
-    player->direction.y = GetInputAxis(INPUT_AXIS_VERTICAL);
-    NormalizeV2(&player->direction);
-    player->velocity.x = player->speed * player->direction.x;
-    player->velocity.y = player->speed * player->direction.y;
+    player->direction[0] = GetInputAxis(INPUT_AXIS_HORIZONTAL);
+    player->direction[1] = GetInputAxis(INPUT_AXIS_VERTICAL);
+    glm_normalize(player->direction);
 
-    player->position.x += player->velocity.x * Time.delta;
-    player->position.z -= player->velocity.y * Time.delta;
+    player->velocity[0] = player->speed * player->direction[0];
+    player->velocity[1] = player->speed * player->direction[1];
+
+    player->position[0] += player->velocity[0] * Time.delta;
+    player->position[2] -= player->velocity[1] * Time.delta;
 }
 
 void DrawPlayer(Player* player)
 {
     glm_mat4_identity(transform);
-    glm_translate(transform, ValuePointerV3(&player->position));
-    glm_rotate(transform, glm_rad(player->rotationAngle), ValuePointerV3(&player->rotationAxis));
-    glm_scale(transform, ValuePointerV3(&player->scale));
+    glm_translate(transform, player->position);
+    glm_rotate(transform, glm_rad(player->rotationAngle), player->rotationAxis);
+    glm_scale(transform, player->scale);
 
     Renderer.DrawMesh(&player->mesh, &transform, &material);
 }
@@ -72,14 +74,15 @@ Player CreatePlayer()
 {
     Player player;
 
-    player.position = (v3){0.f, 0.f, 0.f};
-    player.scale = (v3){2.f, 2.f, 1.f};
-    player.rotationAxis = (v3){1.f, 0.f, 0.f};
-    player.rotationAngle = -55.f;
+    glm_vec3_zero(player.position);
+    glm_vec3_copy((vec3){2.f, 2.f, 1.f}, player.scale);
+    glm_vec3_copy((vec3){1.f, 0.f, 0.f}, player.rotationAxis);
+
+    player.rotationAngle = -70.f;
     player.speed = 3.f;
 
-    player.velocity = (v2){0.f, 0.f};
-    player.direction = (v2){0.f, 0.f};
+    glm_vec2_zero(player.velocity);
+    glm_vec2_zero(player.direction);
 
     CreatePlayerMesh(&player);
 

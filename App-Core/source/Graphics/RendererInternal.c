@@ -160,6 +160,4 @@ void RenderInitShaders(InternalRenderState* renderState)
         GetUniformLocation(&renderState->defaultShader, "material.diffuse");
     renderState->defaultShader.uniformLocs[SHADER_LOC_MAP_DIFFUSE] =
         GetUniformLocation(&renderState->defaultShader, "material.diffuseMap");
-
-    renderState->defaultShader.Bind(renderState->defaultShader.id);
 }

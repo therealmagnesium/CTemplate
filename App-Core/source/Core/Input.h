@@ -36,3 +36,4 @@ bool IsMouseClicked(MouseButton button);
 bool IsKeyDown(u32 scancode);
 bool IsKeyPressed(u32 scancode);
 float GetInputAxis(InputAxis axis);
+float GetInputAxisAlt(InputAxis axis);
