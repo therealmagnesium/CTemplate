@@ -12,10 +12,14 @@ typedef enum CameraType_t
 typedef struct Camera_t
 {
     float fov;
+    float pitch;
+    float yaw;
+
     vec3 position;
     vec3 target;
     vec3 direction;
     vec3 up;
+
     mat4 view;
     mat4 projection;
 } Camera;

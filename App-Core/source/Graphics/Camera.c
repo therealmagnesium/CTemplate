@@ -7,7 +7,6 @@
 #include "Core/Math.h"
 #include "Core/Log.h"
 #include "Core/Time.h"
-#include "cglm/vec3.h"
 
 #include <cglm/cglm.h>
 
@@ -16,50 +15,62 @@ Camera CreateCamera(vec3 position, vec3 up, float fov)
     Camera camera;
     glm_vec3_copy(position, camera.position);
     glm_vec3_copy(up, camera.up);
-    glm_vec3_copy((vec3){0.f, 0.f, 0.f}, camera.target);
+    glm_vec3_zero(camera.target);
     camera.fov = fov;
 
-    vec3 cameraToTarget;
-    glm_vec3_sub(camera.target, camera.position, cameraToTarget);
-    glm_normalize(cameraToTarget);
-    glm_vec3_copy(cameraToTarget, camera.direction);
+    glm_vec3_sub(camera.target, camera.position, camera.direction);
+    glm_normalize(camera.direction);
 
     glm_mat4_identity(camera.projection);
     glm_mat4_identity(camera.view);
+
+    camera.pitch = 0.f;
+    camera.yaw = -90.f;
 
     return camera;
 }
 
 static void UpdateCameraFree()
 {
+    Camera* camera = Renderer.state.primaryCamera;
     float speed = 3.f;
+    vec3 camForward = {0.f, 0.f, -1.f};
 
     vec3 right;
-    glm_vec3_cross((vec3){0.f, 0.f, -1.f}, Renderer.state.primaryCamera->up, right);
+    glm_vec3_cross(camForward, camera->up, right);
     glm_vec3_normalize(right);
 
     if (IsKeyDown(KEY_W))
-        glm_vec3_add((vec3){0.f, 0.f, -1.f * 3 * Time.delta}, Renderer.state.primaryCamera->position,
-                     Renderer.state.primaryCamera->position);
+    {
+        vec3 forwardMovement;
+        glm_vec3_muladds(camForward, speed * Time.delta, forwardMovement);
+        glm_vec3_add(forwardMovement, camera->position, camera->position);
+    }
+
     if (IsKeyDown(KEY_S))
-        glm_vec3_sub(Renderer.state.primaryCamera->position, (vec3){0.f, 0.f, -1.f * 3 * Time.delta},
-                     Renderer.state.primaryCamera->position);
+    {
+        vec3 forwardMovement;
+        glm_vec3_muladds(camForward, speed * Time.delta, forwardMovement);
+        glm_vec3_sub(camera->position, forwardMovement, camera->position);
+    }
 
     if (IsKeyDown(KEY_D))
     {
         vec3 horizontalMovement;
         glm_vec3_muladds(right, speed * Time.delta, horizontalMovement);
-        glm_vec3_add(Renderer.state.primaryCamera->position, horizontalMovement,
-                     Renderer.state.primaryCamera->position);
+        glm_vec3_add(camera->position, horizontalMovement, camera->position);
     }
 
     if (IsKeyDown(KEY_A))
     {
         vec3 horizontalMovement;
         glm_vec3_muladds(right, speed * Time.delta, horizontalMovement);
-        glm_vec3_sub(Renderer.state.primaryCamera->position, horizontalMovement,
-                     Renderer.state.primaryCamera->position);
+        glm_vec3_sub(camera->position, horizontalMovement, camera->position);
     }
+
+    camera->direction[0] = cos(glm_rad(camera->yaw)) * sin(glm_rad(camera->pitch));
+    camera->direction[1] = sin(glm_rad(camera->pitch));
+    camera->direction[2] = sin(glm_rad(camera->yaw)) * cos(glm_rad(camera->pitch));
 }
 
 static void UpdateCameraOrbital() {}
@@ -90,20 +101,21 @@ void UpdateCamera(CameraType type)
 
 void UpdateCameraMatrices()
 {
-    if (Renderer.state.primaryCamera)
+    Camera* camera = Renderer.state.primaryCamera;
+
+    if (camera)
     {
         vec3 center;
         float aspect = (float)App.window.width / App.window.height;
-        glm_vec3_add(Renderer.state.primaryCamera->position, (vec3){0.f, 0.f, -1.f}, center);
-        glm_lookat(Renderer.state.primaryCamera->position, center, Renderer.state.primaryCamera->up,
-                   Renderer.state.primaryCamera->view);
-        glm_perspective(glm_rad(45.f), aspect, 0.1f, 100.f, Renderer.state.primaryCamera->projection);
+        glm_vec3_add(camera->position, (vec3){0.f, 0.f, -1.f}, center);
+        glm_lookat(camera->position, center, camera->up, camera->view);
+        glm_perspective(glm_rad(45.f), aspect, 0.1f, 100.f, camera->projection);
 
         Renderer.state.defaultShader.Bind(Renderer.state.defaultShader.id);
         Renderer.state.defaultShader.SetMat4(Renderer.state.defaultShader.uniformLocs[SHADER_LOC_MATRIX_VIEW],
-                                             (float*)Renderer.state.primaryCamera->view);
+                                             (float*)camera->view);
         Renderer.state.defaultShader.SetMat4(Renderer.state.defaultShader.uniformLocs[SHADER_LOC_MATRIX_PROJECTION],
-                                             (float*)Renderer.state.primaryCamera->projection);
+                                             (float*)camera->projection);
         Renderer.state.defaultShader.Unbind();
     }
 }

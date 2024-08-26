@@ -40,6 +40,9 @@ static void OnUpdate()
 
     if (IsKeyPressed(KEY_F9))
         App.isDebugEnabled = !App.isDebugEnabled;
+
+    if (IsKeyPressed(KEY_F1))
+        LogCameraInfo(&camera);
 }
 
 static void OnRender() { DrawPlayer(&player); }
