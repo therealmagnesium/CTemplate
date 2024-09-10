@@ -13,8 +13,8 @@ typedef struct Player_t
     float rotationAngle;
     float speed;
 
-    vec2 direction;
-    vec2 velocity;
+    vec3 direction;
+    vec3 velocity;
     Mesh mesh;
 } Player;
 

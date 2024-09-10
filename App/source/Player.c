@@ -50,14 +50,14 @@ static void CreatePlayerMesh(Player* player)
 void UpdatePlayer(Player* player)
 {
     player->direction[0] = GetInputAxis(INPUT_AXIS_HORIZONTAL);
-    player->direction[1] = GetInputAxis(INPUT_AXIS_VERTICAL);
+    player->direction[2] = GetInputAxis(INPUT_AXIS_VERTICAL);
     glm_normalize(player->direction);
 
     player->velocity[0] = player->speed * player->direction[0];
-    player->velocity[1] = player->speed * player->direction[1];
+    player->velocity[2] = player->speed * player->direction[2];
 
     player->position[0] += player->velocity[0] * Time.delta;
-    player->position[2] -= player->velocity[1] * Time.delta;
+    player->position[2] -= player->velocity[2] * Time.delta;
 }
 
 void DrawPlayer(Player* player)

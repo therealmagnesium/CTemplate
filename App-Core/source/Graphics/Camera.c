@@ -1,4 +1,5 @@
 #include "Graphics/Camera.h"
+#include "Core/KeyCodes.h"
 #include "Graphics/Renderer.h"
 
 #include "Core/Application.h"
@@ -7,6 +8,7 @@
 #include "Core/Math.h"
 #include "Core/Log.h"
 #include "Core/Time.h"
+#include "cglm/cam.h"
 
 #include <cglm/cglm.h>
 
@@ -36,10 +38,12 @@ static void UpdateCameraFree()
     float speed = 3.f;
     vec3 camForward = {0.f, 0.f, -1.f};
 
-    vec3 right;
-    glm_vec3_cross(camForward, camera->up, right);
-    glm_vec3_normalize(right);
+    // Calculate the camera's right vector, by normalizing the cross product between the forward and up vector
+    vec3 camRight;
+    glm_vec3_cross(camForward, camera->up, camRight);
+    glm_vec3_normalize(camRight);
 
+    // Walk forward
     if (IsKeyDown(KEY_W))
     {
         vec3 forwardMovement;
@@ -47,6 +51,7 @@ static void UpdateCameraFree()
         glm_vec3_add(forwardMovement, camera->position, camera->position);
     }
 
+    // Walk backward
     if (IsKeyDown(KEY_S))
     {
         vec3 forwardMovement;
@@ -54,23 +59,77 @@ static void UpdateCameraFree()
         glm_vec3_sub(camera->position, forwardMovement, camera->position);
     }
 
+    // Walk right
     if (IsKeyDown(KEY_D))
     {
         vec3 horizontalMovement;
-        glm_vec3_muladds(right, speed * Time.delta, horizontalMovement);
+        glm_vec3_muladds(camRight, speed * Time.delta, horizontalMovement);
         glm_vec3_add(camera->position, horizontalMovement, camera->position);
     }
 
+    // Walk left
     if (IsKeyDown(KEY_A))
     {
         vec3 horizontalMovement;
-        glm_vec3_muladds(right, speed * Time.delta, horizontalMovement);
+        glm_vec3_muladds(camRight, speed * Time.delta, horizontalMovement);
         glm_vec3_sub(camera->position, horizontalMovement, camera->position);
     }
 
-    camera->direction[0] = cos(glm_rad(camera->yaw)) * sin(glm_rad(camera->pitch));
+    // Fly upwards
+    if (IsKeyDown(KEY_SPACE))
+    {
+        vec3 verticalMovement;
+        glm_vec3_muladds(camera->up, speed * Time.delta, verticalMovement);
+        glm_vec3_add(camera->position, verticalMovement, camera->position);
+    }
+
+    // Fly downwards
+    if (IsKeyDown(KEY_LEFT_CTRL))
+    {
+        vec3 verticalMovement;
+        glm_vec3_muladds(camera->up, speed * Time.delta, verticalMovement);
+        glm_vec3_sub(camera->position, verticalMovement, camera->position);
+    }
+
+    // Initially set the last mouse position to the center of the screen
+    static Vector2 lastMousePosition;
+    b8 isFirstClick = true;
+
+    if (isFirstClick && IsMouseClicked(MOUSE_BUTTON_LEFT))
+    {
+        lastMousePosition.x = Input.mouse.position.x;
+        lastMousePosition.y = Input.mouse.position.y;
+        isFirstClick = false;
+    }
+
+    v2 mouseOffset = (v2){0.f, 0.f};
+
+    if (IsMouseDown(MOUSE_BUTTON_LEFT))
+    {
+        mouseOffset.x = Input.mouse.position.x - lastMousePosition.x;
+        mouseOffset.y = lastMousePosition.y - Input.mouse.position.y;
+        lastMousePosition.x = Input.mouse.position.x;
+        lastMousePosition.y = Input.mouse.position.y;
+
+        mouseOffset.x *= 0.1f;
+        mouseOffset.y *= 0.1f;
+    }
+
+    // Apply the mouse offset by the pitch and yaw rotation
+    camera->yaw += mouseOffset.x;
+    camera->pitch += mouseOffset.y;
+
+    // Cap the camera's pitch
+    if (camera->pitch > 90.f)
+        camera->pitch = 90.f;
+    if (camera->pitch < -90.f)
+        camera->pitch = -90.f;
+
+    // Calculate the camera's direction using some trig
+    camera->direction[0] = cos(glm_rad(camera->yaw)) * cos(glm_rad(camera->pitch));
     camera->direction[1] = sin(glm_rad(camera->pitch));
     camera->direction[2] = sin(glm_rad(camera->yaw)) * cos(glm_rad(camera->pitch));
+    glm_normalize(camera->direction);
 }
 
 static void UpdateCameraOrbital() {}
@@ -105,10 +164,10 @@ void UpdateCameraMatrices()
 
     if (camera)
     {
-        vec3 center;
         float aspect = (float)App.window.width / App.window.height;
-        glm_vec3_add(camera->position, (vec3){0.f, 0.f, -1.f}, center);
-        glm_lookat(camera->position, center, camera->up, camera->view);
+
+        // glm_lookat(camera->position, camera->direction, camera->up, camera->view);
+        glm_look(camera->position, camera->direction, camera->up, camera->view);
         glm_perspective(glm_rad(45.f), aspect, 0.1f, 100.f, camera->projection);
 
         Renderer.state.defaultShader.Bind(Renderer.state.defaultShader.id);

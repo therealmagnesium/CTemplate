@@ -35,11 +35,11 @@ static void OnCreate()
 
 static void OnUpdate()
 {
-    UpdateCamera(CAMERA_FREE);
-    // UpdatePlayer(&player);
-
     if (IsKeyPressed(KEY_F9))
         App.isDebugEnabled = !App.isDebugEnabled;
+
+    if (!App.isDebugEnabled)
+        UpdateCamera(CAMERA_FREE);
 
     if (IsKeyPressed(KEY_F1))
         LogCameraInfo(&camera);
